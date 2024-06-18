@@ -223,6 +223,30 @@ namespace OtherHooks
 		}
 	}
 
+	namespace IMod {
+		__declspec(naked) void* __cdecl ApplyIMOD(TESForm* ref, float a1, int a3) {
+			static uint32_t retnAddr = 0x5299A5;
+
+			__asm {
+				push ebp
+				mov ebp, esp
+			}
+
+			if (ref) {
+				PluginManager::Dispatch_Message(0, NVSEMessagingInterface::kMessage_OnApplyIMOD, (void*)ref, sizeof(void*), nullptr);
+			}
+
+			_asm {
+				push 0xFFFFFFFF
+				jmp retnAddr
+			}
+		}
+
+		void WriteHooks() {
+			WriteRelJump(0x5299A0, reinterpret_cast<UInt32>(ApplyIMOD));
+		}
+	}
+
 	void __fastcall ScriptDestructorHook(Script* script)
 	{
 		// hooked call
@@ -238,6 +262,7 @@ namespace OtherHooks
 
 		PreScriptExecute::WriteHooks();
 		PostScriptExecute::WriteHooks();
+		IMod::WriteHooks();
 
 		WriteRelCall(0x5AA206, ScriptDestructorHook);
 
