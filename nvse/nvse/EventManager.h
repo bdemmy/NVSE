@@ -100,6 +100,7 @@ namespace EventManager
 		kEventID_RenameNewGameName,
 		kEventID_PreLoadGame,
 		kEventID_OnApplyIMOD,
+		kEventID_OnRemoveIMOD,
 
 		kEventID_DebugEvent, // for unit tests
 		kEventID_InternalMAX,

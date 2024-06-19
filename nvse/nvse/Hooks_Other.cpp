@@ -1,4 +1,6 @@
 #include "Hooks_Other.h"
+
+#include "Commands_Array.h"
 #include "GameAPI.h"
 #include "ScriptUtils.h"
 #include "SafeWrite.h"
@@ -242,8 +244,31 @@ namespace OtherHooks
 			}
 		}
 
+		__declspec(naked) void* RemoveIMOD() {
+			static uint32_t retnAddr = 0x633C90;
+			static uint32_t retnAddr2 = 0x529D3C;
+			static TESForm* ref = nullptr;
+
+			__asm {
+				pushad
+				mov eax, [ebp + 0x8]
+				mov ref, eax
+			}
+
+			if (ref) {
+				PluginManager::Dispatch_Message(0, NVSEMessagingInterface::kMessage_OnRemoveIMOD, (void*)ref, sizeof(void*), nullptr);
+			}
+
+			_asm {
+				popad
+				push retnAddr2
+				jmp retnAddr
+			}
+		}
+
 		void WriteHooks() {
 			WriteRelJump(0x5299A0, reinterpret_cast<UInt32>(ApplyIMOD));
+			WriteRelJump(0x529D37, reinterpret_cast<UInt32>(RemoveIMOD));
 		}
 	}
 

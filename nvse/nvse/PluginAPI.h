@@ -263,6 +263,7 @@ struct NVSEMessagingInterface
 		kMessage_PostQueryPlugins, // called after all plugins have been queried
 
 		kMessage_OnApplyIMOD,
+		kMessage_OnRemoveIMOD,
 	};
 
 	UInt32	version;
